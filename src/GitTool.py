@@ -15,4 +15,12 @@ output = "<list>\n"+str(outputb,"iso-8859-1")+"\n</list>"
 print ("XML")
 root=ET.XML(output)
 commits=root.findall("commit")
-print (commits)
+
+for commit in commits:
+	authorname=commit.find("author").text
+	date=commit.find("date").text
+	message=commit.find("message").text
+	reference=commit.find("ref").text
+	print("\nCommit : "+reference+"\nby "+authorname+" ["+date+"]\n"+message)
+
+
