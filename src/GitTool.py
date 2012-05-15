@@ -7,12 +7,12 @@ new="6f4677f"
 format="--pretty=format:'<commit>%n<ref>%h</ref>%n<author>%an</author>%n<date>%ai</date>%n<message>%s</message>%n</commit>"
 
 print("RUN COMMAND")
-subprocess.Popen(['git', 'log', format, old+".."+new], stdout=subprocess.PIPE)
-output = git.stdout.read()
+subp=subprocess.Popen(['git', 'log', format, old+".."+new], stdout=subprocess.PIPE)
+outputb=subp.stdout.read()
+output = "<list>\n"+str(outputb,"iso-8859-1")+"\n</list>"
 
 
 print ("XML")
-# file=open("log.xml")
-# root=ET.XML(file.read())
-# commits=root.findAll("commit")
-# print (commits)
+root=ET.XML(output)
+commits=root.findall("commit")
+print (commits)
