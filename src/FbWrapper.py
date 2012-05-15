@@ -49,3 +49,13 @@ class FbWrapper:
 		##now real thing
 		#ras
 		
+	def newCheckin(bugid, files, revisions,repo):
+		cmd="newCheckin"
+		url=self.createUrl(cmd,[["ixBug",bugid],["sFile",files],["sPrev",revisions[0]],["sNext",revisions[1]],["ixRepository",repo]])
+		out=self.doRequest(url)
+		xml=self.checkError(out)
+
+	def listCheckin(bugid):
+		url=self.createUrl(cmd,[["ixBug",bugid]])
+		out=self.doRequest(url)
+		xml=self.checkError(out)
