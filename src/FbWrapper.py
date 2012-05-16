@@ -60,7 +60,7 @@ class FbWrapper:
 	def newCheckin(self,bugid, files, revisions,repo):
 		print("NEW_CHECKIN")
 		cmd="newCheckin"
-		url=self.createUrl(cmd,[["ixBug",bugid],["sFile",files],["sPrev",revisions[0]],["sNext",revisions[1]],["ixRepository",repo]])
+		url=self.createUrl(cmd,[["ixBug",bugid],["sFile",files],["sPrev",revisions[0]],["sNew",revisions[1]],["ixRepository",repo]])
 		out=self.doRequest(url)
 		xml=self.checkError(out)
 
