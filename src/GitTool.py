@@ -25,16 +25,23 @@ for commit in commits:
 	date=commit.find("date").text
 	message=commit.find("message").text
 	reference=commit.find("ref").text
+	process=subprocess.Popen(['git', 'diff', "--name-only", reference], stdout=subprocess.PIPE)
+	filelist=str(process.stdout.read(),"iso-8859-1").replace("\n",",")
 	print("\nCommit : "+reference+"\nby "+authorname+" ["+date+"]\n"+message)
+	print(filelist)
+	case = message.find("BugzId:%d")
+	if(case>0):
+		#we mus look for all references
+		print("we will send a requesto fogbugz")
+		
 	
 	print("Request to fogbugz generation")
-	
 	
 	my_repo_name = "my_repo"
 	repo_id = "1" #saw this in fb
 	bug_id = "2"
-	files = "file"#date +" "+ authorname#we lie
-	fb.newCheckin(bug_id,files,[old,new],repo_id)
+	files = filelist
+	#fb.newCheckin(bug_id,files,[old,reference],repo_id)
 
 fb.logoff()
 
