@@ -5,22 +5,30 @@ import sys
 import urllib.request
 
 class DownloadProgressBar(QtG.QProgressBar):
-	def __init__(self,url,parent):
+	def __init__(self,srcurl,dsturl,parent):
 		super(DownloadProgressBar,self).__init__(parent)
-		self.mRequest = QtN.QNetworkRequest(url)
+		self.mRequest = QtN.QNetworkRequest(srcurl)
 		self.mNetwork =QtN.QNetworkAccessManager()
+		self.mStarted = False
+		self.mFile = QtC.QFile(dsturl)
+		self.setValue(0)
 		
 	def Start(self):
+		if self.mStarted:
+			return
+		self.mStarted = True
 		self.mReply =self.mNetwork.get(self.mRequest)
 		self.mReply.downloadProgress.connect(self.UpdateProgress)
 		self.mReply.finished.connect(self.Finished)
-
-	
+		
 	
 	@QtC.Slot()
 	def Finished(self):
-		print("end of this!")
-	
+		self.mFile.open(QtC.QIODevice.ReadWrite)
+		sizewritten=self.mFile.write(self.mReply.readAll())
+		self.mFile.close()
+		print("printed a file of "+str(sizewritten)+"bytes")
+		
 	@QtC.Slot(int,int)
 	def UpdateProgress(self,received,total):
 		self.setMaximum(total)
@@ -34,9 +42,8 @@ class MainDialog(QtG.QDialog):
 		self.mButton = QtG.QPushButton("download",self)
 		self.mButton.clicked.connect(self.Download)
 		address=QtC.QUrl("http://www.kernel.org/pub/linux/kernel/v3.0/linux-3.3.6.tar.bz2")
-		self.mLocalFile=QtC.QUrl("local_file.tar.bz2")
-		self.mBar = DownloadProgressBar(address,self)
-		
+		local="local_file.tar.bz2"
+		self.mBar = DownloadProgressBar(address,local,self)
 		self.mBar.setGeometry(100,0,100,20)
 		self.mBar.show()
 		self.mButton.show()
